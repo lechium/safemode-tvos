@@ -40,44 +40,16 @@
 
 %group TVOS
 
+//on tvOS 13+ their main controller in PreBoard is a subclass of UIAlertController called PREViewController.
 @interface PREViewController: UIAlertController
 @end
 
 %hook PREViewController
 - (void)viewWillAppear:(BOOL)animated {
     %orig;
-    if ([self isKindOfClass: [UIAlertController class]]){
-        [self slideExitIntoPreBoardAlertIfNecessary];
+    if ([self isKindOfClass: [UIAlertController class]]){ //making sure its future / past proof in case PREViewController existed in prior versions that didnt inherit from UIAlertController
+        [self slideExitIntoPreBoardAlertIfNecessary]; //we inherit from UIAlertController so using slideExitIntoPreBoardAlertIfNecessary from definition below!
     }
-}
-
-%new - (void)slideExitIntoPreBoardAlertIfNecessary {
-
-       NSString *sleepTitle = NSLocalizedString(@"PREDialogTitle", nil) ;
-       NSString *sleepMessage = NSLocalizedString(@"PREMainMessage", nil);
-       if ([self.title isEqualToString:sleepTitle] && [self.message isEqualToString:sleepMessage]){
-             self.title = [NSString stringWithFormat:@"Safe / %@", sleepTitle];
-             self.message = [NSString stringWithFormat:@"%@\n\nTo enter Safe Mode, choose Safe Mode.\nTo exit Recovery mode without restarting, choose Exit.", sleepMessage];
-             UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"Exit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    
-                   [[UIApplication sharedApplication] terminateWithSuccess];
-                   
-             }];
-            
-
-            UIAlertAction *safeAction = [UIAlertAction actionWithTitle:@"Safe Mode" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                 
-                   int rv = open("/var/mobile/Library/Preferences/com.saurik.mobilesubstrate.dat", O_RDWR|O_CREAT, 0644);
-                   NSLog(@"[SAFE-MODE] open returned with %i", rv);
-                   [NSTask launchedTaskWithLaunchPath:@"/usr/bin/sbreload" arguments:@[]];
-                   [[UIApplication sharedApplication] terminateWithSuccess];
-              
-             }];
-             [self addAction:safeAction];
-             [self addAction:exitAction];
-
-        }
-
 }
 
 %end
