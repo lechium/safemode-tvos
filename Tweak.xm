@@ -277,7 +277,6 @@ static void MSAlert() {
 
 
 // XXX: on iOS 5.0, we really would prefer avoiding 
-
 %hook SBStatusBar
 - (void) touchesEnded:(id)touches withEvent:(id)event {
     MSAlert();
@@ -500,7 +499,9 @@ static void AlertIfNeeded() {
     %orig(@"Exit");
 } %end
 
-%end
+//end IOS group
+%end 
+
 // on iOS 6.0, Apple split parts of SpringBoard into a daemon called backboardd, including app launches
 // in order to allow safe mode to propogate into applications, we need to then tell backboardd here
 // XXX: (all of this should be replaced, however, with per-process launchd-mediated exception handling)

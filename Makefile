@@ -12,7 +12,7 @@ MobileSafety_FILES := Tweak.xm
 MobileSafety_FRAMEWORKS := UIKit
 MobileSafety_OPTFLAG := -O2
 
-ADDITIONAL_CFLAGS += -Wno-error=tautological-undefined-compare -Wno-error=deprecated-declarations
+ADDITIONAL_CFLAGS += -Wno-error=tautological-undefined-compare -Wno-error=deprecated-declarations -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations
 #ADDITIONAL_LDFLAGS += -Xarch_armv6 -Wl,-lgcc_s.1
 
 #ADDITIONAL_LDFLAGS += -Xarch_armv6 -Wl,-segalign,4000 -Xarch_armv6 -ffixed-r9
